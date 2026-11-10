@@ -107,9 +107,10 @@ decode the same way, so the reported frequency is the real one.
 PSRAM is clocked from a second PLL (the MPLL) at half its frequency. The PSRAM
 patch adds the steps and keeps ESP-IDF's timing tuning on for them.
 
-**Other ESP32 chips are not supported.** The ones with a radio take the CPU
-clock from a fixed PLL that the radio also needs, so they have no equivalent
-divider to raise.
+**Other ESP32 chips are not supported.** The ESP32-S3, for example, has one
+PLL (320 or 480 MHz) and the CPU takes at most half of it. That same PLL
+clocks the Wi-Fi and Bluetooth radio, USB and the 160 MHz peripheral clocks,
+so raising it moves all of them. Nothing here was tried on those chips.
 
 ## License
 
