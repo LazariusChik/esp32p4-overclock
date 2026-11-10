@@ -1,0 +1,6 @@
+CONFIG_IDF_TARGET="esp32p4"
+CONFIG_SPIRAM=y
+# The two test tasks never yield, so the idle-task watchdog is off.
+CONFIG_ESP_TASK_WDT_INIT=n
+CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ_400=y
+CONFIG_SPIRAM_SPEED_250M=y

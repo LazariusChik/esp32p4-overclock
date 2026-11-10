@@ -1,0 +1,134 @@
+diff --git a/components/esp_hw_support/mspi_timing_tuning/port/esp32p4/mspi_timing_tuning_configs.h b/components/esp_hw_support/mspi_timing_tuning/port/esp32p4/mspi_timing_tuning_configs.h
+index 2d15950..7b5f9b3 100644
+--- a/components/esp_hw_support/mspi_timing_tuning/port/esp32p4/mspi_timing_tuning_configs.h
++++ b/components/esp_hw_support/mspi_timing_tuning/port/esp32p4/mspi_timing_tuning_configs.h
+@@ -15,7 +15,28 @@
+ #define MSPI_TIMING_FLASH_TEST_DATA_ADDR    CONFIG_BOOTLOADER_OFFSET_IN_FLASH
+ 
+ #define MSPI_TIMING_CORE_CLOCK_DIV          1
+-#if CONFIG_SPIRAM_SPEED_250M
++#if CONFIG_SPIRAM_SPEED_320M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           640 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_310M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           620 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_300M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           600 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_290M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           580 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_280M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           560 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_270M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           540 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_260M
++#define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
++#define MSPI_TIMING_MPLL_FREQ_MHZ           520 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_250M
+ #define MSPI_TIMING_PSRAM_NEEDS_TUNING      1
+ #define MSPI_TIMING_MPLL_FREQ_MHZ           500
+ #elif CONFIG_SPIRAM_SPEED_200M
+diff --git a/components/esp_hw_support/mspi_timing_tuning/tuning_scheme_impl/mspi_timing_by_dqs.c b/components/esp_hw_support/mspi_timing_tuning/tuning_scheme_impl/mspi_timing_by_dqs.c
+index 79ec3b0..5b4d66d 100644
+--- a/components/esp_hw_support/mspi_timing_tuning/tuning_scheme_impl/mspi_timing_by_dqs.c
++++ b/components/esp_hw_support/mspi_timing_tuning/tuning_scheme_impl/mspi_timing_by_dqs.c
+@@ -32,7 +32,7 @@
+ #define AP_HEX_PSRAM_RD_CMD_BITLEN         16
+ #define AP_HEX_PSRAM_WR_CMD_BITLEN         16
+ #define AP_HEX_PSRAM_ADDR_BITLEN           32
+-#if CONFIG_SPIRAM_SPEED_250M
++#if CONFIG_SPIRAM_SPEED_250M || CONFIG_SPIRAM_SPEED_260M || CONFIG_SPIRAM_SPEED_270M || CONFIG_SPIRAM_SPEED_280M || CONFIG_SPIRAM_SPEED_290M || CONFIG_SPIRAM_SPEED_300M || CONFIG_SPIRAM_SPEED_310M || CONFIG_SPIRAM_SPEED_320M
+ #define AP_HEX_PSRAM_RD_DUMMY_BITLEN       (2*(18-1))
+ #define AP_HEX_PSRAM_WR_DUMMY_BITLEN       (2*(9-1))
+ #elif CONFIG_SPIRAM_SPEED_200M
+diff --git a/components/esp_psram/device/esp_psram_impl_ap_hex.c b/components/esp_psram/device/esp_psram_impl_ap_hex.c
+index e7b7001..94189ed 100644
+--- a/components/esp_psram/device/esp_psram_impl_ap_hex.c
++++ b/components/esp_psram/device/esp_psram_impl_ap_hex.c
+@@ -28,7 +28,7 @@
+ #define AP_HEX_PSRAM_WR_CMD_BITLEN         16
+ #define AP_HEX_PSRAM_ADDR_BITLEN           32
+ 
+-#if CONFIG_SPIRAM_SPEED_250M
++#if CONFIG_SPIRAM_SPEED_250M || CONFIG_SPIRAM_SPEED_260M || CONFIG_SPIRAM_SPEED_270M || CONFIG_SPIRAM_SPEED_280M || CONFIG_SPIRAM_SPEED_290M || CONFIG_SPIRAM_SPEED_300M || CONFIG_SPIRAM_SPEED_310M || CONFIG_SPIRAM_SPEED_320M
+ #define AP_HEX_PSRAM_RD_DUMMY_BITLEN       (2*(18-1))
+ #define AP_HEX_PSRAM_RD_REG_DUMMY_BITLEN   (2*(9-1))
+ #define AP_HEX_PSRAM_WR_DUMMY_BITLEN       (2*(9-1))
+@@ -59,6 +59,20 @@
+ #define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 320
+ #elif CONFIG_SPIRAM_SPEED_250M
+ #define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 500
++#elif CONFIG_SPIRAM_SPEED_260M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 520 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_320M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 640 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_310M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 620 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_300M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 600 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_290M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 580 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_280M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 560 /* ProtoOS overclock trial */
++#elif CONFIG_SPIRAM_SPEED_270M
++#define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 540 /* ProtoOS overclock trial */
+ #else
+ #define AP_HEX_PSRAM_MPLL_DEFAULT_FREQ_MHZ 400
+ #endif
+diff --git a/components/esp_psram/esp32p4/Kconfig.spiram b/components/esp_psram/esp32p4/Kconfig.spiram
+index 3dd2074..84d45bf 100644
+--- a/components/esp_psram/esp32p4/Kconfig.spiram
++++ b/components/esp_psram/esp32p4/Kconfig.spiram
+@@ -30,6 +30,34 @@ menu "PSRAM config"
+         help
+             Select the speed for the PSRAM chip.
+ 
++        config SPIRAM_SPEED_320M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "320MHz clock speed (ProtoOS overclock trial)"
++
++        config SPIRAM_SPEED_310M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "310MHz clock speed (ProtoOS overclock trial)"
++
++        config SPIRAM_SPEED_300M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "300MHz clock speed (ProtoOS overclock trial)"
++
++        config SPIRAM_SPEED_290M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "290MHz clock speed (ProtoOS overclock trial)"
++
++        config SPIRAM_SPEED_280M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "280MHz clock speed (ProtoOS overclock trial)"
++
++        config SPIRAM_SPEED_270M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "270MHz clock speed (ProtoOS overclock trial)"
++
++        config SPIRAM_SPEED_260M
++            depends on !ESP32P4_SELECTS_REV_LESS_V3
++            bool "260MHz clock speed (ProtoOS overclock trial)"
++
+         config SPIRAM_SPEED_250M
+             depends on !ESP32P4_SELECTS_REV_LESS_V3
+             bool "250MHz clock speed"
+@@ -51,6 +79,13 @@ menu "PSRAM config"
+         default 100 if SPIRAM_SPEED_100M
+         default 200 if SPIRAM_SPEED_200M
+         default 250 if SPIRAM_SPEED_250M
++        default 260 if SPIRAM_SPEED_260M
++        default 270 if SPIRAM_SPEED_270M
++        default 280 if SPIRAM_SPEED_280M
++        default 290 if SPIRAM_SPEED_290M
++        default 300 if SPIRAM_SPEED_300M
++        default 310 if SPIRAM_SPEED_310M
++        default 320 if SPIRAM_SPEED_320M
+ 
+     config SPIRAM_FETCH_INSTRUCTIONS
+         bool

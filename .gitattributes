@@ -1,0 +1,2 @@
+# Patches must keep LF endings or `git apply` rejects them on Windows.
+* text=auto eol=lf

@@ -1,0 +1,196 @@
+diff --git a/components/esp_hw_support/port/esp32p4/rtc_clk.c b/components/esp_hw_support/port/esp32p4/rtc_clk.c
+index 20e3df0..fa80a40 100644
+--- a/components/esp_hw_support/port/esp32p4/rtc_clk.c
++++ b/components/esp_hw_support/port/esp32p4/rtc_clk.c
+@@ -261,6 +261,13 @@ static void rtc_clk_cpu_freq_to_cpll_mhz(int cpu_freq_mhz, hal_utils_clk_div_t *
+     }
+ #else
+     switch (cpu_freq_mhz) {
++    case 470:
++    case 460:
++    case 450:
++    case 440:
++    case 430:
++    case 420:
++    case 410:
+     case 400:
+         mem_divider = 2;
+         apb_divider = 2;
+@@ -384,6 +391,48 @@ bool rtc_clk_cpu_freq_mhz_to_config(uint32_t freq_mhz, rtc_cpu_freq_config_t *ou
+         source = SOC_CPU_CLK_SRC_CPLL;
+         source_freq_mhz = CLK_LL_PLL_400M_FREQ_MHZ;
+         divider.integer = 1;
++    } else if (freq_mhz == 410) {
++        // ProtoOS overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_410M_FREQ_MHZ;
++        divider.integer = 1;
++    } else if (freq_mhz == 420) {
++        // ProtoOS overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_420M_FREQ_MHZ;
++        divider.integer = 1;
++    } else if (freq_mhz == 430) {
++        // ProtoOS overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_430M_FREQ_MHZ;
++        divider.integer = 1;
++    } else if (freq_mhz == 440) {
++        // ProtoOS overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_440M_FREQ_MHZ;
++        divider.integer = 1;
++    } else if (freq_mhz == 470) {
++        // ProtoOS correctly encoded CPU overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_470M_FREQ_MHZ;
++        divider.integer = 1;
++    } else if (freq_mhz == 460) {
++        // ProtoOS overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_460M_FREQ_MHZ;
++        divider.integer = 1;
++    } else if (freq_mhz == 450) {
++        // ProtoOS overclock trial
++        real_freq_mhz = freq_mhz;
++        source = SOC_CPU_CLK_SRC_CPLL;
++        source_freq_mhz = CLK_LL_PLL_450M_FREQ_MHZ;
++        divider.integer = 1;
+     } else {
+         // unsupported frequency
+         return false;
+diff --git a/components/esp_system/port/soc/esp32p4/Kconfig.cpu b/components/esp_system/port/soc/esp32p4/Kconfig.cpu
+index 3d7e7ba..1810d68 100644
+--- a/components/esp_system/port/soc/esp32p4/Kconfig.cpu
++++ b/components/esp_system/port/soc/esp32p4/Kconfig.cpu
+@@ -26,6 +26,27 @@ choice ESP_DEFAULT_CPU_FREQ_MHZ
+     config ESP_DEFAULT_CPU_FREQ_MHZ_400
+         bool "400 MHz"
+         depends on !ESP32P4_SELECTS_REV_LESS_V3 || ESP_FORCE_400MHZ_ON_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_410
++        bool "410 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_420
++        bool "420 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_430
++        bool "430 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_440
++        bool "440 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_470
++        bool "470 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_460
++        bool "460 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
++    config ESP_DEFAULT_CPU_FREQ_MHZ_450
++        bool "450 MHz (ProtoOS overclock trial)"
++        depends on !ESP32P4_SELECTS_REV_LESS_V3
+ endchoice
+ 
+ config ESP_DEFAULT_CPU_FREQ_MHZ
+@@ -33,3 +54,10 @@ config ESP_DEFAULT_CPU_FREQ_MHZ
+     default 40 if ESP_DEFAULT_CPU_FREQ_MHZ_40
+     default 360 if ESP_DEFAULT_CPU_FREQ_MHZ_360
+     default 400 if ESP_DEFAULT_CPU_FREQ_MHZ_400
++    default 410 if ESP_DEFAULT_CPU_FREQ_MHZ_410
++    default 420 if ESP_DEFAULT_CPU_FREQ_MHZ_420
++    default 430 if ESP_DEFAULT_CPU_FREQ_MHZ_430
++    default 440 if ESP_DEFAULT_CPU_FREQ_MHZ_440
++    default 450 if ESP_DEFAULT_CPU_FREQ_MHZ_450
++    default 460 if ESP_DEFAULT_CPU_FREQ_MHZ_460
++    default 470 if ESP_DEFAULT_CPU_FREQ_MHZ_470
+diff --git a/components/hal/esp32p4/include/hal/clk_tree_ll.h b/components/hal/esp32p4/include/hal/clk_tree_ll.h
+index a3ca270..d317879 100644
+--- a/components/hal/esp32p4/include/hal/clk_tree_ll.h
++++ b/components/hal/esp32p4/include/hal/clk_tree_ll.h
+@@ -43,6 +43,13 @@ extern "C" {
+ 
+ #define CLK_LL_PLL_360M_FREQ_MHZ   (360)
+ #define CLK_LL_PLL_400M_FREQ_MHZ   (400)
++#define CLK_LL_PLL_410M_FREQ_MHZ   (410) /* ProtoOS overclock trial: 40 * 41 / 4 */
++#define CLK_LL_PLL_420M_FREQ_MHZ   (420) /* ProtoOS overclock trial: 40 * 42 / 4 */
++#define CLK_LL_PLL_430M_FREQ_MHZ   (430) /* ProtoOS overclock trial: 40 * 43 / 4 */
++#define CLK_LL_PLL_440M_FREQ_MHZ   (440) /* ProtoOS overclock trial: 40 * 11 */
++#define CLK_LL_PLL_470M_FREQ_MHZ   (470) /* Raw 39 -> swap bits 3:2 -> 43, +4 -> 47; ref /4 */
++#define CLK_LL_PLL_460M_FREQ_MHZ   (460) /* ProtoOS overclock trial: 40 * 138 / 12 */
++#define CLK_LL_PLL_450M_FREQ_MHZ   (450) /* ProtoOS overclock trial: 40 * 90 / 8 */
+ 
+ #define CLK_LL_PLL_480M_FREQ_MHZ   (480)
+ #define CLK_LL_PLL_500M_FREQ_MHZ   (500)
+@@ -344,6 +351,16 @@ static inline __attribute__((always_inline)) bool clk_ll_rc32k_digi_is_enabled(v
+  *
+  * @return CPLL clock frequency, in MHz
+  */
++/* ProtoOS ECO1+ CPLL readback: swap divider bits 3:2, then the
++ * analog multiplier is encoded value + 4. Raw is an 8-bit field, so
++ * the decoded result is <=259 and XTAL(40) * multiplier fits uint32_t.
++ * Existing 360..460 choices agree with linear readback; raw 39 does not. */
++static inline __attribute__((always_inline)) uint32_t clk_ll_cpll_decode_eco1_divider(uint8_t raw)
++{
++    uint32_t swapped = ((uint32_t)raw & ~12u) | (((uint32_t)raw & 4u) << 1) | (((uint32_t)raw & 8u) >> 1);
++    return swapped + 4u;
++}
++
+ static inline __attribute__((always_inline)) uint32_t clk_ll_cpll_get_freq_mhz(uint32_t xtal_freq_mhz)
+ {
+     uint8_t div = REGI2C_READ_MASK(I2C_CPLL, I2C_CPLL_OC_DIV_7_0);
+@@ -352,7 +369,7 @@ static inline __attribute__((always_inline)) uint32_t clk_ll_cpll_get_freq_mhz(u
+     if (!ESP_CHIP_REV_ABOVE(chip_version, 1)) {
+         return xtal_freq_mhz * (div + 4) / (ref_div + 1);
+     }
+-    return xtal_freq_mhz * div / (ref_div + 1);
++    return xtal_freq_mhz * clk_ll_cpll_decode_eco1_divider(div) / (ref_div + 1);
+ }
+ 
+ /**
+@@ -401,6 +418,41 @@ static inline __attribute__((always_inline)) void clk_ll_cpll_set_config(uint32_
+     } else {
+         /*div7_0 bit2 & bit3 is swapped from ECO1*/
+         switch (cpll_freq_mhz) {
++        case CLK_LL_PLL_410M_FREQ_MHZ:
++            /* ProtoOS trial: 410M CPLL, 10 MHz phase reference */
++            div7_0 = 41;
++            div_ref = 3;
++            break;
++        case CLK_LL_PLL_420M_FREQ_MHZ:
++            /* ProtoOS trial: 420M CPLL, 10 MHz phase reference */
++            div7_0 = 42;
++            div_ref = 3;
++            break;
++        case CLK_LL_PLL_430M_FREQ_MHZ:
++            /* ProtoOS trial: 430M CPLL, 10 MHz phase reference */
++            div7_0 = 43;
++            div_ref = 3;
++            break;
++        case CLK_LL_PLL_440M_FREQ_MHZ:
++            /* ProtoOS trial: 440M CPLL, stock 40 MHz phase reference */
++            div7_0 = 11;
++            div_ref = 0;
++            break;
++        case CLK_LL_PLL_470M_FREQ_MHZ:
++            /* Raw 47 would run at 510 MHz. Decode raw 39 to effective 47. */
++            div7_0 = 39;
++            div_ref = 3;
++            break;
++        case CLK_LL_PLL_460M_FREQ_MHZ:
++            /* ProtoOS trial: 460M CPLL, div bits 3:2 = 10 for ECO1 readback */
++            div7_0 = 138;
++            div_ref = 11;
++            break;
++        case CLK_LL_PLL_450M_FREQ_MHZ:
++            /* ProtoOS trial: 450M CPLL, 5 MHz phase reference (45 would set bit2 and bit3) */
++            div7_0 = 90;
++            div_ref = 7;
++            break;
+         case CLK_LL_PLL_400M_FREQ_MHZ:
+             /* Configure 400M CPLL */
+             div7_0 = 10;
